@@ -1,7 +1,7 @@
 #---- Data Cleaning -----
 
 #Grouping Data by NTA (Neighborhood Tabulation Area)
-def bin_test(dataframe, grouping = None):
+def bin_data(dataframe, grouping = None):
     #create empty list for closest NTA centroids
     close_NTA_lat = []
     close_NTA_long = []
@@ -36,13 +36,26 @@ def bin_test(dataframe, grouping = None):
     else:
         return dataframe
     
-    return grouped_df
+    #for each NTA value
+    for lat, long in NTA.values:
+        #check that it is not in the grouped dataframe
+        if lat not in grouped_df['NTA_lat'].values and long not in grouped_df['NTA_long'].values:
+            #if not then append a row with that NTA lat long
+            df = {'NTA_lat': lat, 'NTA_long': long}
+            grouped_df = grouped_df.append(df, ignore_index=True)
+       
+    #return df with NaN replaced by 0
+    return grouped_df.fillna(0)
     
     
 #Zipping lat and long for mapping + analysis
 def lat_long_zip(df):
+    import geopandas
+    from shapely.geometry import Point
+    
     geometry = [Point(xy) for xy in zip(df['longitude'], df['latitude'])]
-    geo_df = geopandas.GeoDataFrame(df, crs = crs, geometry=geopandas.points_from_xy(df["longitude"], df["latitude"]))
+    geo_df = geopandas.GeoDataFrame(df, crs = {'init': 'epsg:2263'},
+                                    geometry=geopandas.points_from_xy(df["longitude"], df["latitude"]))
     geo_df.drop(['latitude', 'longitude'], axis=1, inplace=True)
     return geo_df
 

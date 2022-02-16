@@ -22,8 +22,8 @@ def bin_data(dataframe, metric = None, col_name = None, fill_na = 0):
         NTA_long.append(NTA.loc[difference.index(min(difference)), 'longitude'])
         
     #save a new column to inputted dataframe with closest NTA centroid       
-    dataframe['NTA_lat'] = close_NTA_lat
-    dataframe['NTA_long'] = close_NTA_long
+    dataframe['NTA_lat'] = NTA_lat
+    dataframe['NTA_long'] = NTA_long
     
     #return data frame grouped depeding on input
     if metric == 'count':

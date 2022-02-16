@@ -1,7 +1,7 @@
 #---- Data Cleaning -----
 
 #Grouping Data by NTA (Neighborhood Tabulation Area)
-def bin_data(dataframe, grouping = None):
+def bin_data(dataframe, grouping = None, count_name = None):
     #create empty list for closest NTA centroids
     close_NTA_lat = []
     close_NTA_long = []
@@ -27,11 +27,15 @@ def bin_data(dataframe, grouping = None):
     
     #return data frame grouped depeding on input
     if grouping == 'count':
-        grouped = dataframe.value_counts(['close_NTA_lat', 'close_NTA_long']).rename_axis(['NTA_lat', 'NTA_long']).reset_index(name='count')
+        grouped = dataframe.value_counts(['close_NTA_lat', 'close_NTA_long']).rename_axis(['NTA_lat', 'NTA_long']).reset_index(name=count_name)
         grouped_df = pd.DataFrame(grouped)
     elif grouping == 'sum':
         grouped = dataframe.groupby(['close_NTA_lat', 'close_NTA_long']).sum().drop(['latitude', 'longitude'], axis=1)
         grouped_df = pd.DataFrame(grouped).rename_axis(['NTA_lat', 'NTA_long']).reset_index()
+    elif grouping == 'mean':
+        grouped = dataframe.groupby(['close_NTA_lat', 'close_NTA_long']).mean().drop(['latitude', 'longitude'], axis=1)
+        grouped_df = pd.DataFrame(grouped).rename_axis(['NTA_lat', 'NTA_long']).reset_index()
+        
     #if none is specified 
     else:
         return dataframe

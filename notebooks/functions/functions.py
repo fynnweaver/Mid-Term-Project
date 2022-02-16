@@ -183,7 +183,7 @@ def lat_long_zip(df):
     geo_df = geopandas.GeoDataFrame(df, crs = {'init': 'epsg:2263'},
                                     geometry=geopandas.points_from_xy(df["NTA_long"], df["NTA_lat"]))
     geo_df.drop(['NTA_lat', 'NTA_long'], axis=1, inplace=True)
-    return geo_dfi
+    return geo_df
 
 #Applies lat_long_zip to inputted dataframe
 def llz_set(df_list):

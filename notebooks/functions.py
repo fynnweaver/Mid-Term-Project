@@ -1,10 +1,10 @@
 #---- Data Cleaning -----
 
 #Grouping Data by NTA (Neighborhood Tabulation Area)
-def bin_data(dataframe, grouping = None, count_name = None):
+def bin_data(dataframe, metric = None, col_name = None, fill_na = 0):
     #create empty list for closest NTA centroids
-    close_NTA_lat = []
-    close_NTA_long = []
+    NTA_lat = []
+    NTA_long = []
     
     #for every row
     for i in range(dataframe.shape[0]):
@@ -18,25 +18,24 @@ def bin_data(dataframe, grouping = None, count_name = None):
             difference.append(abs(df_lat - lat) + abs(df_long - long))
         
         #save lat, long of closest NTA by getting the index of the minimum difference value
-        close_NTA_lat.append(NTA.loc[difference.index(min(difference)), 'latitude'])
-        close_NTA_long.append(NTA.loc[difference.index(min(difference)), 'longitude'])
+        NTA_lat.append(NTA.loc[difference.index(min(difference)), 'latitude'])
+        NTA_long.append(NTA.loc[difference.index(min(difference)), 'longitude'])
         
     #save a new column to inputted dataframe with closest NTA centroid       
-    dataframe['close_NTA_lat'] = close_NTA_lat
-    dataframe['close_NTA_long'] = close_NTA_long
+    dataframe['NTA_lat'] = close_NTA_lat
+    dataframe['NTA_long'] = close_NTA_long
     
     #return data frame grouped depeding on input
-    if grouping == 'count':
-        grouped = dataframe.value_counts(['close_NTA_lat', 'close_NTA_long']).rename_axis(['NTA_lat', 'NTA_long']).reset_index(name=count_name)
+    if metric == 'count':
+        grouped = dataframe.value_counts(['NTA_lat', 'NTA_long']).rename_axis(['NTA_lat', 'NTA_long']).reset_index(name=col_name)
         grouped_df = pd.DataFrame(grouped)
-    elif grouping == 'sum':
-        grouped = dataframe.groupby(['close_NTA_lat', 'close_NTA_long']).sum().drop(['latitude', 'longitude'], axis=1)
+    elif metric == 'sum':
+        grouped = dataframe.groupby(['NTA_lat', 'NTA_long']).sum().drop(['latitude', 'longitude'], axis=1)
         grouped_df = pd.DataFrame(grouped).rename_axis(['NTA_lat', 'NTA_long']).reset_index()
-    elif grouping == 'mean':
-        grouped = dataframe.groupby(['close_NTA_lat', 'close_NTA_long']).mean().drop(['latitude', 'longitude'], axis=1)
-        grouped_df = pd.DataFrame(grouped).rename_axis(['NTA_lat', 'NTA_long']).reset_index()
-        
-    #if none is specified 
+    elif metric == 'mean':
+        grouped = dataframe.groupby(['NTA_lat', 'NTA_long']).mean().drop(['latitude', 'longitude'], axis=1)
+        grouped_df = pd.DataFrame(grouped).rename_axis(['NTA_lat', 'NTA_long']).reset_index()    
+    #if no metric is specified just returned pre-grouped array 
     else:
         return dataframe
     
@@ -47,9 +46,10 @@ def bin_data(dataframe, grouping = None, count_name = None):
             #if not then append a row with that NTA lat long
             df = {'NTA_lat': lat, 'NTA_long': long}
             grouped_df = grouped_df.append(df, ignore_index=True)
-       
+    
+    
     #return df with NaN replaced by 0
-    return grouped_df.fillna(0)
+    return  grouped_df.fillna(fill_na)
     
     
 #Zipping lat and long for mapping + analysis

@@ -140,8 +140,8 @@ def bin_data(dataframe, metric = None, col_name = None, fill_na = 0):
             difference.append(abs(df_lat - lat) + abs(df_long - long))
         
         #save lat, long of closest NTA by getting the index of the minimum difference value
-        NTA_lat.append(NTA.loc[difference.index(min(difference)), 'latitude'])
-        NTA_long.append(NTA.loc[difference.index(min(difference)), 'longitude'])
+        NTA_lat.append(NTA.loc[difference.index(min(difference)), 'NTA_lat'])
+        NTA_long.append(NTA.loc[difference.index(min(difference)), 'NTA_long'])
         
     #save a new column to inputted dataframe with closest NTA centroid       
     dataframe['NTA_lat'] = NTA_lat

@@ -191,3 +191,31 @@ def llz_set(df_list):
     for element in df_list:
         new_df_list.append(lat_long_zip(element))
     return new_df_list
+
+#plot clusters
+def plot_clusters(X,y_res, plt_cluster_centers = False):
+    X_centroids = []
+    Y_centroids = []
+
+    for cluster in set(y_res):
+        x = X[y_res == cluster,0]
+        y = X[y_res == cluster,1]
+        X_centroids.append(np.mean(x))
+        Y_centroids.append(np.mean(y))
+
+        plt.scatter(x,
+                    y,
+                    s=50,
+                    marker='s',
+                    label=f'cluster {cluster}')
+
+    if plt_cluster_centers:
+        plt.scatter(X_centroids,
+                    Y_centroids,
+                    marker='*',
+                    c='red',
+                    s=250,
+                    label='centroids')
+    plt.legend()
+    plt.grid()
+    plt.show()

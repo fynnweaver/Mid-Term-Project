@@ -8,5 +8,7 @@ All code work can be found in `notebooks`. `notebooks/deprecated` includes earli
 
 `processed_data` contains the `master.csv` from which all clustering was run. It also contains binned but single feature datasets within category subfolders.
 
-Finally, all saved visualizations can be found in `figures`.
+Finally, all saved visualizations can be found in `figures`. Final clustering result had an error rate of 8% and can be seen below:
+
+![cluster_v6](https://github.com/fynnweaver/Mid-Term-Project/blob/main/figures/clustering/clustering_6.png)
 
